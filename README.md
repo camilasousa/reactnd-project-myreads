@@ -9,3 +9,6 @@ This project is part of the Nanodegree React Program.
 
 ## Run
  - npm start
+
+## Linter
+ - npm run lint
