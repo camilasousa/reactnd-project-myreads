@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import Book from './Book';
 
 const Header = () => (
   <div className="list-books-title">
@@ -17,10 +18,10 @@ const SearchButton = () => (
 const Home = ({ books }) => (
   <div className="list-books">
     <Header />
-    <ul>
+    <ul className="books-grid">
       {
         books.map(book => (
-          <li key={book.id}>{book.title}</li>
+          <li key={book.id}><Book book={book} /></li>
         ))
       }
     </ul>
