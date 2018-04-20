@@ -1,16 +1,14 @@
 import React from 'react';
-import logo from './logo.svg';
+import { Route } from 'react-router-dom';
+import Home from './Home';
+import Search from './Search';
+
 import './App.css';
 
 const App = () => (
   <div className="App">
-    <header className="App-header">
-      <img src={logo} className="App-logo" alt="logo" />
-      <h1 className="App-title">Welcome to React</h1>
-    </header>
-    <p className="App-intro">
-      To get started, edit <code>src/App.js</code> and save to reload.
-    </p>
+    <Route exact path="/" render={Home} />
+    <Route path="/search" render={Search} />
   </div>
 );
 
