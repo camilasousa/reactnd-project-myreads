@@ -6,7 +6,7 @@ import Search from './Search';
 import './App.css';
 
 const App = () => (
-  <div className="App">
+  <div className="app">
     <Route exact path="/" render={Home} />
     <Route path="/search" render={Search} />
   </div>
