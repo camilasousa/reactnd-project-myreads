@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import Book from './Book';
+import Shelf from './Shelf';
 
 const Header = () => (
   <div className="list-books-title">
@@ -15,24 +15,21 @@ const SearchButton = () => (
   </div>
 );
 
-const Home = ({ books }) => (
+const Home = ({ shelfs }) => (
   <div className="list-books">
     <Header />
-    <ul className="books-grid">
+    <div className="list-books-content">
       {
-        books.map(book => (
-          <li key={book.id}><Book book={book} /></li>
-        ))
+        shelfs.map(shelf => <Shelf key={shelf.id} shelf={shelf} />)
       }
-    </ul>
+    </div>
     <SearchButton />
   </div>
 );
 
 Home.propTypes = {
-  books: PropTypes.arrayOf(PropTypes.shape({
+  shelfs: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
   })).isRequired,
 };
 

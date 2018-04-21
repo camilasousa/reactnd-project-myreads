@@ -14,6 +14,24 @@ const headers = {
   Authorization: token,
 };
 
+const SHELFS = [
+  {
+    id: 'currentlyReading',
+    name: 'Currently Reading',
+  },
+  {
+    id: 'wantToRead',
+    name: 'Want To Read',
+  },
+  {
+    id: 'read',
+    name: 'Read',
+  },
+];
+
+export const getShelfs = () =>
+  Promise.resolve(SHELFS);
+
 export const get = bookId =>
   fetch(`${api}/books/${bookId}`, { headers })
     .then(res => res.json())
