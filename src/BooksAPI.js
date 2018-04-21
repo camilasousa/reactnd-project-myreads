@@ -61,4 +61,10 @@ export const search = query =>
     },
     body: JSON.stringify({ query }),
   }).then(res => res.json())
-    .then(data => data.books);
+    .then((data) => {
+      const books = data.books;
+      if (books && books.constructor === Array) {
+        return books;
+      }
+      throw (books.error ? books.error : 'Something bad happened');
+    });
