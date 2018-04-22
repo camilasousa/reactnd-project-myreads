@@ -2,15 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Book from './Book';
 
-const Shelf = ({ shelf }) => (
+const Shelf = ({ shelf, shelfs, books, onSelectShelf }) => (
   <div className="bookshelf">
     <h2 className="bookshelf-title">{shelf.name}</h2>
     <div className="bookshelf-books">
       <ol className="books-grid">
         {
-          shelf.books.map(book => (
+          books.map(book => (
             <li key={book.id}>
-              <Book book={book} />
+              <Book
+                book={book}
+                shelfs={shelfs}
+                selectedShelf={shelf.id}
+                onSelectShelf={shelfId => onSelectShelf(book, shelfId)}
+              />
             </li>
           ))
         }
@@ -22,8 +27,16 @@ const Shelf = ({ shelf }) => (
 Shelf.propTypes = {
   shelf: PropTypes.shape({
     name: PropTypes.string.isRequired,
-    books: PropTypes.array.isRequired,
   }).isRequired,
+  books: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+  })).isRequired,
+  onSelectShelf: PropTypes.func.isRequired,
+  shelfs: Book.propTypes.shelfs,
+};
+
+Shelf.defaultProps = {
+  shelfs: [],
 };
 
 export default Shelf;

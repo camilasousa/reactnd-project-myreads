@@ -1,37 +1,38 @@
 import React from 'react';
 import HomeView from '../views/Home';
-import { getShelfs, getAll } from '../BooksAPI';
-
-
-const organizeBooksByShelfId = books =>
-  books.reduce((booksByShelf, book) => {
-    const newBooksByShelf = { ...booksByShelf };
-    newBooksByShelf[book.shelf] = (newBooksByShelf[book.shelf] || []).concat(book);
-    return newBooksByShelf;
-  }, {});
-
-const addBooksToShelfs = (shelfs, booksByShelf) =>
-  shelfs.map(shelf => ({
-    ...shelf,
-    books: booksByShelf[shelf.id] || [],
-  }));
-
-const completeShelfs = (shelfs, books) =>
-  addBooksToShelfs(shelfs, organizeBooksByShelfId(books));
+import { getShelfs, getAll, update } from '../BooksAPI';
+import { keyValueReducer, keyValueListReducer } from '../utils';
 
 
 class Home extends React.Component {
   state = {
+    booksById: {},
     shelfs: [],
+    booksByShelf: {},
   }
 
   componentDidMount() {
     Promise.all([getAll(), getShelfs()])
-      .then(([books, shelfs]) => this.setState({ shelfs: completeShelfs(shelfs, books) }));
+      .then(([books, shelfs]) => this.setState({
+        booksById: books.reduce(keyValueReducer('id'), {}),
+        booksByShelf: books.reduce(keyValueListReducer('shelf', 'id'), {}),
+        shelfs,
+      }));
+  }
+
+  handleOnSelectShelf = (book, shelfId) => {
+    update(book, shelfId)
+      .then(bookIdsByShelfId =>
+        this.setState({ booksByShelf: bookIdsByShelfId }),
+      );
   }
 
   render() {
-    return (<HomeView shelfs={this.state.shelfs} />);
+    return (
+      <HomeView
+        onSelectShelf={this.handleOnSelectShelf}
+        {...this.state}
+      />);
   }
 }
 

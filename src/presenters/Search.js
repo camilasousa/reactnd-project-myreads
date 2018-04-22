@@ -1,12 +1,21 @@
 import React from 'react';
 import SearchView from '../views/Search';
-import { search } from '../BooksAPI';
-import { debounce } from '../utils';
+import { search, getShelfs, update, getAll } from '../BooksAPI';
+import { debounce, keyValueReducer, invertListByKey } from '../utils';
 
 class Search extends React.Component {
   state = {
     query: '',
     results: [],
+    shelfs: [],
+    shelfByBook: {},
+  }
+
+  componentDidMount() {
+    getShelfs().then(shelfs => this.setState({ shelfs }));
+    getAll().then(books => this.setState({
+      shelfByBook: books.reduce(keyValueReducer('id', 'shelf'), {}),
+    }));
   }
 
   debouncedSearch = debounce(this.search, 500, this)
@@ -44,11 +53,18 @@ class Search extends React.Component {
     this.setState({ results: [] });
   }
 
+  handleOnSelectShelf = (book, shelfId) => {
+    update(book, shelfId)
+      .then(booksByShelf =>
+        this.setState({ shelfByBook: invertListByKey(booksByShelf) }),
+      );
+  }
+
   render() {
     return (
       <SearchView
-        query={this.state.query}
-        results={this.state.results}
+        {...this.state}
+        onSelectShelf={this.handleOnSelectShelf}
         onSearchInputChange={this.handleOnSearchInputChange}
       />
     );

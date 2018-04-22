@@ -19,13 +19,18 @@ SearchInput.propTypes = {
   query: PropTypes.string.isRequired,
 };
 
-const Results = ({ books }) => (
+const Results = ({ results, onSelectShelf, shelfs, shelfByBook }) => (
   <div className="search-books-results">
     <ol className="books-grid">
       {
-        books.map(book => (
+        results.map(book => (
           <li key={book.id}>
-            <Book book={book} />
+            <Book
+              book={book}
+              shelfs={shelfs}
+              selectedShelf={shelfByBook[book.id]}
+              onSelectShelf={shelfId => onSelectShelf(book, shelfId)}
+            />
           </li>
         ))
       }
@@ -34,21 +39,29 @@ const Results = ({ books }) => (
 );
 
 Results.propTypes = {
-  books: PropTypes.arrayOf(PropTypes.shape(Book.propTypes.book)).isRequired,
+  results: PropTypes.arrayOf(PropTypes.shape(Book.propTypes.book)).isRequired,
+  shelfs: Book.propTypes.shelfs,
+  onSelectShelf: PropTypes.func.isRequired,
+  shelfByBook: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
-const Search = ({ onSearchInputChange, results, query }) => (
+Results.defaultProps = {
+  shelfs: [],
+};
+
+const Search = ({
+  onSearchInputChange, query, ...props
+}) => (
   <div className="search-books">
     <div className="search-books-bar">
       <Link className="close-search" to="/">Close</Link>
       <SearchInput query={query} onChange={onSearchInputChange} />
     </div>
-    <Results books={results} />
+    <Results {...props} />
   </div>
 );
 
 Search.propTypes = {
-  results: PropTypes.arrayOf(PropTypes.shape(Book.propTypes.book)).isRequired,
   onSearchInputChange: PropTypes.func.isRequired,
   query: PropTypes.string,
 };
